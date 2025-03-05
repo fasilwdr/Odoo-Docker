@@ -6,6 +6,12 @@ if [ -v PASSWORD_FILE ]; then
     PASSWORD="$(< $PASSWORD_FILE)"
 fi
 
+# Handle GITPATH if provided as an environment variable
+if [ -n "$GITPATH" ]; then
+    echo "GITPATH environment variable detected, cloning repositories..."
+    /usr/local/bin/git-clone-repos.sh "$GITPATH"
+fi
+
 # set the postgres database host, port, user and password according to the environment
 # and pass them as arguments to the odoo process if not present in the config file
 : ${HOST:=${DB_PORT_5432_TCP_ADDR:='db'}}
