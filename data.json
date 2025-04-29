@@ -1,0 +1,20 @@
+{
+  "16.0": {
+    "Dockerfile":  "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/Dockerfile",
+    "entrypoint.sh": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/entrypoint.sh",
+    "odoo.conf": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/odoo.conf",
+    "wait-for-psql.py": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/wait-for-psql.py"
+  },
+  "17.0": {
+    "Dockerfile":  "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/17.0/Dockerfile",
+    "entrypoint.sh": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/17.0/entrypoint.sh",
+    "odoo.conf": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/17.0/odoo.conf",
+    "wait-for-psql.py": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/17.0/wait-for-psql.py"
+  },
+  "18.0": {
+    "Dockerfile":  "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/Dockerfile",
+    "entrypoint.sh": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/entrypoint.sh",
+    "odoo.conf": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/odoo.conf",
+    "wait-for-psql.py": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/wait-for-psql.py"
+  }
+}

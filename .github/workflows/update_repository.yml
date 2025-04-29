@@ -1,0 +1,37 @@
+name: Update Odoo Dockerfiles
+
+on:
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches:
+      - master
+    paths:
+      - 'data.json'  # Trigger when data.json is updated
+
+jobs:
+  update-dockerfiles:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Update Dockerfiles
+        run: |
+          python update_dockerfiles.py
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and push changes
+        run: |
+          git add */Dockerfile
+          git commit -m "Update Dockerfiles to use curl instead of COPY" || echo "No changes to commit"
+          git push
