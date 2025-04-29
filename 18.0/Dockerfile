@@ -80,8 +80,8 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
     && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-COPY ./entrypoint.sh /
-COPY ./odoo.conf /etc/odoo/
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/entrypoint.sh -o /entrypoint.sh && chmod +x /entrypoint.sh
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/odoo.conf -o /odoo.conf
 
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /etc/odoo/odoo.conf \
