@@ -43,5 +43,5 @@ jobs:
       - name: Commit and push changes
         run: |
           git add */Dockerfile
-          git commit -m "Update Dockerfiles to use curl instead of COPY" || echo "No changes to commit"
+          git commit -m "Update Dockerfiles" || echo "No changes to commit"
           git push origin ${GITHUB_REF##*/}

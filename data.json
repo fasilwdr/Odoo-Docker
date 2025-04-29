@@ -1,4 +1,10 @@
 {
+  "15.0": {
+    "Dockerfile":  "https://raw.githubusercontent.com/odoo/docker/5fb6a842747c296099d9384587cd89640eb7a615/15.0/Dockerfile",
+    "entrypoint.sh": "https://raw.githubusercontent.com/odoo/docker/5fb6a842747c296099d9384587cd89640eb7a615/15.0/entrypoint.sh",
+    "odoo.conf": "https://raw.githubusercontent.com/odoo/docker/5fb6a842747c296099d9384587cd89640eb7a615/15.0/odoo.conf",
+    "wait-for-psql.py": "https://raw.githubusercontent.com/odoo/docker/5fb6a842747c296099d9384587cd89640eb7a615/15.0/wait-for-psql.py"
+  },
   "16.0": {
     "Dockerfile":  "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/Dockerfile",
     "entrypoint.sh": "https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/entrypoint.sh",
