@@ -2,6 +2,8 @@ name: Update Odoo Dockerfiles
 
 on:
   workflow_dispatch:  # Manual trigger
+  schedule:
+    - cron: '0 0 * * 2'  # Run at 00:00 UTC every Tuesday
   push:
     branches:
       - master
