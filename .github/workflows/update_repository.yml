@@ -9,6 +9,10 @@ on:
       - 'data.json'  # Trigger when data.json is updated
       - '.github/workflows/update_repository.yml'  # Trigger when the workflow file is updated
 
+# Add permissions for the GitHub token
+permissions:
+  contents: write
+
 jobs:
   update-dockerfiles:
     runs-on: ubuntu-latest
@@ -40,4 +44,4 @@ jobs:
         run: |
           git add */Dockerfile
           git commit -m "Update Dockerfiles to use curl instead of COPY" || echo "No changes to commit"
-          git push
+          git push origin ${GITHUB_REF##*/}
