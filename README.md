@@ -21,6 +21,16 @@ This repository contains modified Dockerfiles for all Odoo versions from 10.0 to
 3. Use it directly in your project or paste it into Portainer/UI composer
 4. Build your Odoo container
 
+### Building Specific Releases
+
+You can build older releases of Odoo by modifying the `ODOO_RELEASE` variable in the Dockerfile:
+
+1. Locate the `ENV ODOO_RELEASE=...` line in the Dockerfile
+2. Change the version number to your desired release (e.g., `20250101` for a specific January 2025 release)
+3. Build the container as usual
+
+This allows you to deploy specific Odoo releases while maintaining the benefits of the standalone Dockerfile approach.
+
 ## Available Versions
 
 - Odoo 10.0
