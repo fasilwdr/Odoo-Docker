@@ -6,8 +6,9 @@ on:
     branches:
       - master
     paths:
-      - 'data.json'  # Trigger when data.json is updated
-      - '.github/workflows/update_repository.yml'  # Trigger when the workflow file is updated
+      - 'update_dockerfiles.py'
+      - 'data.json'
+      - '.github/workflows/update_repository.yml'
 
 # Add permissions for the GitHub token
 permissions:

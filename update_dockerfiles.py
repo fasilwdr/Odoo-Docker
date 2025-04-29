@@ -22,30 +22,88 @@ def process_dockerfile(dockerfile_content, file_urls):
     """
     modified_content = dockerfile_content
 
-    # Find and replace COPY commands with curl commands
+    # First, find all the COPY commands in the Dockerfile
+    copy_commands = re.findall(r'COPY\s+[^\n]+', modified_content)
+
+    # Process each file
     for filename, url in file_urls.items():
         if filename == "Dockerfile":
             continue  # Skip the Dockerfile itself
 
-        # Different patterns for different files
-        if filename.endswith('.sh'):
-            # For shell scripts, we need to make them executable
-            copy_pattern = re.compile(rf'COPY\s+{filename}\s+/.*?(?:\n|$)', re.IGNORECASE | re.MULTILINE)
-            curl_command = f'RUN curl -sSL {url} -o /{filename} && chmod +x /{filename}\n'
-        elif filename.endswith('.py'):
-            # For Python scripts
-            copy_pattern = re.compile(rf'COPY\s+{filename}\s+/.*?(?:\n|$)', re.IGNORECASE | re.MULTILINE)
-            curl_command = f'RUN curl -sSL {url} -o /{filename} && chmod +x /{filename}\n'
-        else:
-            # For config files
-            copy_pattern = re.compile(rf'COPY\s+{filename}\s+/.*?(?:\n|$)', re.IGNORECASE | re.MULTILINE)
-            curl_command = f'RUN curl -sSL {url} -o /{filename}\n'
+        # Try to find a COPY command that matches this filename
+        matched = False
+        for copy_cmd in copy_commands:
+            # Check if this command is for our file
+            if f"COPY {filename}" in copy_cmd or f"COPY ./{filename}" in copy_cmd:
+                matched = True
+                # Create replacement curl command
+                if filename.endswith('.sh') or filename.endswith('.py'):
+                    # For executable files
+                    curl_cmd = f"RUN curl -sSL {url} -o /{filename} && chmod +x /{filename}"
+                else:
+                    # For regular files
+                    curl_cmd = f"RUN curl -sSL {url} -o /{filename}"
 
-        # Replace COPY with curl
-        if copy_pattern.search(modified_content):
-            modified_content = copy_pattern.sub(curl_command, modified_content)
-        else:
+                # Replace in the content, using a regex that matches the whole line
+                pattern = re.escape(copy_cmd)
+                modified_content = re.sub(pattern, curl_cmd, modified_content)
+                break
+
+        # Special case for wait-for-psql.py which might have a different destination path
+        if not matched and filename == "wait-for-psql.py":
+            pattern = re.compile(r'COPY\s+wait-for-psql.py\s+/usr/local/bin/wait-for-psql.py', re.IGNORECASE)
+            if pattern.search(modified_content):
+                curl_cmd = f"RUN curl -sSL {url} -o /usr/local/bin/wait-for-psql.py && chmod +x /usr/local/bin/wait-for-psql.py"
+                modified_content = pattern.sub(curl_cmd, modified_content)
+                matched = True
+
+        # Special case for configuration files which might have a different destination path
+        if not matched and filename == "odoo.conf":
+            pattern = re.compile(r'COPY\s+odoo.conf\s+/etc/odoo/', re.IGNORECASE)
+            if pattern.search(modified_content):
+                curl_cmd = f"RUN curl -sSL {url} -o /etc/odoo/odoo.conf"
+                modified_content = pattern.sub(curl_cmd, modified_content)
+                matched = True
+
+        if not matched:
             print(f"Warning: Could not find COPY command for {filename}")
+
+    # Add all curl commands in a single RUN block at the end of the Dockerfile if any are missing
+    missing_files = []
+    for filename, url in file_urls.items():
+        if filename == "Dockerfile":
+            continue
+
+        # Check if curl command for this file is already in the Dockerfile
+        curl_pattern = f"curl -sSL {url}"
+        if curl_pattern not in modified_content:
+            missing_files.append((filename, url))
+
+    if missing_files:
+        print(f"Adding missing curl commands for: {', '.join(f[0] for f in missing_files)}")
+
+        # Find appropriate location to add the commands (before USER odoo or at end)
+        user_line_match = re.search(r'^USER\s+odoo\s*$', modified_content, re.MULTILINE)
+
+        curl_block = "\n# Download any missing files\n"
+        for filename, url in missing_files:
+            if filename.endswith('.sh') or filename.endswith('.py'):
+                if "wait-for-psql.py" in filename:
+                    curl_block += f"RUN curl -sSL {url} -o /usr/local/bin/wait-for-psql.py && chmod +x /usr/local/bin/wait-for-psql.py\n"
+                else:
+                    curl_block += f"RUN curl -sSL {url} -o /{filename} && chmod +x /{filename}\n"
+            elif "odoo.conf" in filename:
+                curl_block += f"RUN curl -sSL {url} -o /etc/odoo/odoo.conf\n"
+            else:
+                curl_block += f"RUN curl -sSL {url} -o /{filename}\n"
+
+        if user_line_match:
+            # Insert before USER line
+            pos = user_line_match.start()
+            modified_content = modified_content[:pos] + curl_block + modified_content[pos:]
+        else:
+            # Append to end
+            modified_content += curl_block
 
     return modified_content
 
