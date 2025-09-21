@@ -1,6 +1,6 @@
 # Odoo Docker Builder
 
-This repository contains modified Dockerfiles for all Odoo versions from 10.0 to 18.0. Each Dockerfile has been modified to download the necessary support files directly from GitHub during the build process, removing the need to have those files locally.
+This repository contains modified Dockerfiles for all Odoo versions from 10.0 to 19.0. Each Dockerfile has been modified to download the necessary support files directly from GitHub during the build process, removing the need to have those files locally.
 
 ## Purpose
 
