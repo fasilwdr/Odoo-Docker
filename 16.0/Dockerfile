@@ -78,8 +78,8 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
     && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/entrypoint.sh -o /entrypoint.sh && chmod +x /entrypoint.sh
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/odoo.conf -o /odoo.conf
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/5229f719d751ea7f375f48b8ba8483894d04ab63/16.0/entrypoint.sh -o /entrypoint.sh && chmod +x /entrypoint.sh
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/5229f719d751ea7f375f48b8ba8483894d04ab63/16.0/odoo.conf -o /odoo.conf
 
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /etc/odoo/odoo.conf \
@@ -93,7 +93,7 @@ EXPOSE 8069 8071 8072
 # Set the default config file
 ENV ODOO_RC /etc/odoo/odoo.conf
 
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/16.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/5229f719d751ea7f375f48b8ba8483894d04ab63/16.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
 
 # Set default user when running the container
 USER odoo

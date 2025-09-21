@@ -70,9 +70,9 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ noble-pgdg main' > /etc/a
 RUN npm install -g rtlcss
 
 # Install Odoo
-ENV ODOO_VERSION 18.0
+ENV ODOO_VERSION 19.0
 ARG ODOO_RELEASE=20250918
-ARG ODOO_SHA=87dee1ca919a9920f1ad1b4c08933052e47c0add
+ARG ODOO_SHA=3b7db7702c236b9060d5668a39a5ac61944b1153
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
     && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
     && apt-get update \
@@ -80,8 +80,8 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
     && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/entrypoint.sh -o /entrypoint.sh && chmod +x /entrypoint.sh
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/odoo.conf -o /odoo.conf
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/19.0/entrypoint.sh -o /entrypoint.sh && chmod +x /entrypoint.sh
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/19.0/odoo.conf -o /odoo.conf
 
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /etc/odoo/odoo.conf \
@@ -95,7 +95,7 @@ EXPOSE 8069 8071 8072
 # Set the default config file
 ENV ODOO_RC /etc/odoo/odoo.conf
 
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/19.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
 
 # Set default user when running the container
 USER odoo
