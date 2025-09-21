@@ -11,7 +11,7 @@ This repository contains modified Dockerfiles for all Odoo versions from 10.0 to
 
 * Simplifies deployment in UI-based container management systems
 * Eliminates the need to download and manage multiple support files
-* Works with all Odoo versions from 10.0 through 18.0
+* Works with all Odoo versions from 10.0 through 19.0
 * Each version's Dockerfile is self-contained and standalone
 
 ## How to Use
@@ -42,6 +42,7 @@ This allows you to deploy specific Odoo releases while maintaining the benefits 
 - Odoo 16.0
 - Odoo 17.0
 - Odoo 18.0
+- Odoo 19.0
 
 ## License
 
