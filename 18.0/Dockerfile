@@ -1,10 +1,10 @@
 FROM ubuntu:noble
-MAINTAINER Odoo S.A. <info@odoo.com>
+LABEL maintainer="Odoo S.A. <info@odoo.com>"
 
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 
 # Generate locale C.UTF-8 for postgres and general locale data
-ENV LANG en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Retrieve the target architecture to install the correct wkhtmltopdf package
 ARG TARGETARCH
@@ -70,9 +70,9 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ noble-pgdg main' > /etc/a
 RUN npm install -g rtlcss
 
 # Install Odoo
-ENV ODOO_VERSION 18.0
-ARG ODOO_RELEASE=20260504
-ARG ODOO_SHA=f3440ffc9a7be9be64d194419085aa624267f217
+ENV ODOO_VERSION=18.0
+ARG ODOO_RELEASE=20260513
+ARG ODOO_SHA=d38a0f9db707d146d8aea3315bf53303fe7784e9
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
     && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
     && apt-get update \
@@ -93,7 +93,7 @@ VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 EXPOSE 8069 8071 8072
 
 # Set the default config file
-ENV ODOO_RC /etc/odoo/odoo.conf
+ENV ODOO_RC=/etc/odoo/odoo.conf
 
 RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/18.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
 

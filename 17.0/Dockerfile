@@ -1,10 +1,10 @@
 FROM ubuntu:jammy
-MAINTAINER Odoo S.A. <info@odoo.com>
+LABEL maintainer="Odoo S.A. <info@odoo.com>"
 
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
 
 # Generate locale C.UTF-8 for postgres and general locale data
-ENV LANG en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Retrieve the target architecture to install the correct wkhtmltopdf package
 ARG TARGETARCH
@@ -70,9 +70,9 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main' > /etc/a
 RUN npm install -g rtlcss
 
 # Install Odoo
-ENV ODOO_VERSION 17.0
-ARG ODOO_RELEASE=20260504
-ARG ODOO_SHA=43cb8f677cbb325ada98bdd10c5980386deb1a72
+ENV ODOO_VERSION=17.0
+ARG ODOO_RELEASE=20260513
+ARG ODOO_SHA=e4643d0e5f868abeade3920bc3d2009a063ae526
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
     && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
     && apt-get update \
@@ -93,7 +93,7 @@ VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
 EXPOSE 8069 8071 8072
 
 # Set the default config file
-ENV ODOO_RC /etc/odoo/odoo.conf
+ENV ODOO_RC=/etc/odoo/odoo.conf
 
 RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/17.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
 
