@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM ubuntu:noble
 LABEL maintainer="Odoo S.A. <info@odoo.com>"
 
 SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
@@ -12,7 +12,6 @@ ARG TARGETARCH
 # Install some deps, lessc and less-plugin-clean-css, and wkhtmltopdf
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive \
     apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
@@ -52,7 +51,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* wkhtmltox.deb
 
 # install latest postgresql-client
-RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ noble-pgdg main' > /etc/apt/sources.list.d/pgdg.list \
     && GNUPGHOME="$(mktemp -d)" \
     && export GNUPGHOME \
     && repokey='B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8' \
@@ -73,9 +72,9 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Odoo
-ENV ODOO_VERSION=17.0
-ARG ODOO_RELEASE=20260908
-ARG ODOO_SHA=57a8df50c37363cce2d3f2e626d1b4e67b53fc11
+ENV ODOO_VERSION=20.0
+ARG ODOO_RELEASE=20260926
+ARG ODOO_SHA=7cb4a582ebe275a4f9c22eae24ce2bcb7fa27040
 RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
     && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
     && apt-get update \
@@ -83,8 +82,8 @@ RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/od
     && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/d9c2d8d50aa8eca1aadc186241bee3eac0e2d79e/17.0/entrypoint.sh -o /entrypoint.sh && chmod +x /entrypoint.sh
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/d9c2d8d50aa8eca1aadc186241bee3eac0e2d79e/17.0/odoo.conf -o /odoo.conf
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/20.0/entrypoint.sh -o /entrypoint.sh && chmod +x /entrypoint.sh
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/20.0/odoo.conf -o /odoo.conf
 
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /etc/odoo/odoo.conf \
@@ -98,7 +97,7 @@ EXPOSE 8069 8071 8072
 # Set the default config file
 ENV ODOO_RC=/etc/odoo/odoo.conf
 
-RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/d9c2d8d50aa8eca1aadc186241bee3eac0e2d79e/17.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
+RUN curl -sSL https://raw.githubusercontent.com/odoo/docker/refs/heads/master/20.0/wait-for-psql.py -o /wait-for-psql.py && chmod +x /wait-for-psql.py
 
 # Set default user when running the container
 USER odoo
